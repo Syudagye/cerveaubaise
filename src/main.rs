@@ -1,82 +1,85 @@
-use std::{env::args, process::exit, slice::Iter};
+rouille::rouille! {
 
-fn main() {
-    let args: Vec<String> = args().collect();
-    if args.len() == 1 {}
+utilisons std::{env::args, process::exit, slice::Iter};
 
-    let mut expr: &[u8] = &[0];
-    let mut cmd_ptr: usize = 0;
-    let mut input: Iter<u8> = [0].iter();
+fonction principale() {
+    soit arguments: Vec<Chaine> = args().collect();
 
-    match args.len() {
+    soit mutable expression: &[u8] = &[0];
+    soit mutable pointeur_de_commande: usize = 0;
+    soit mutable entrée: Iter<u8> = [0].iter();
+
+    selon arguments.len() {
         1 => {
-            eprint!("Aucun argument donné. Utilisation: cerveaubaise <expr> [input]");
+            eprintln!("Aucun argument donné. Utilisation: cerveaubaise <expression> [entrée]");
             exit(1);
         }
         2 => {
-            expr = args[1].as_bytes();
+            expression = arguments[1].as_bytes();
         }
         3 => {
-            expr = args[1].as_bytes();
-            input = args[2].as_bytes().iter();
+            expression = arguments[1].as_bytes();
+            entrée = arguments[2].as_bytes().iter();
         }
         _ => (),
     }
 
-    let data_array: &mut [u8] = &mut [0; 30000];
-    let mut data_ptr: usize = 0;
+    soit tronçon_de_données: &mutable [u8] = &mutable [0; 30000];
+    soit mutable pointeur_de_données: usize = 0;
 
-    loop {
-        if let Some(cmd) = expr.get(cmd_ptr) {
-            match cmd {
-                b'>' => data_ptr = (data_ptr + 1).clamp(0, 30000),
-                b'<' => data_ptr = (data_ptr - 1).clamp(0, 30000),
-                b'+' => data_array[data_ptr] += 1,
-                b'-' => data_array[data_ptr] -= 1,
+    boucle {
+        si soit Quelque(commande) = expression.lire(pointeur_de_commande) {
+            selon commande {
+                b'>' => pointeur_de_données = (pointeur_de_données + 1).clamp(0, 30000),
+                b'<' => pointeur_de_données = (pointeur_de_données - 1).clamp(0, 30000),
+                b'+' => tronçon_de_données[pointeur_de_données] += 1,
+                b'-' => tronçon_de_données[pointeur_de_données] -= 1,
                 b'.' => print!(
                     "{}",
-                    char::from_u32(data_array[data_ptr] as u32).unwrap_or('?')
+                    char::from_u32(tronçon_de_données[pointeur_de_données] as u32).unwrap_or('?')
                 ),
-                b',' => data_array[data_ptr] = *input.next().unwrap_or(&0),
+                b',' => tronçon_de_données[pointeur_de_données] = *entrée.next().unwrap_or(&0),
                 b'[' => {
-                    if data_array[data_ptr] == 0 {
-                        find_matching_start_or_end(&mut cmd_ptr, expr, true);
+                    si tronçon_de_données[pointeur_de_données] == 0 {
+                        trouver_le_debut_ou_la_fin_de_la_section(&mutable pointeur_de_commande, expression, vrai);
                     }
                 }
                 b']' => {
-                    if data_array[data_ptr] != 0 {
-                        find_matching_start_or_end(&mut cmd_ptr, expr, false);
+                    si tronçon_de_données[pointeur_de_données] != 0 {
+                        trouver_le_debut_ou_la_fin_de_la_section(&mutable pointeur_de_commande, expression, faux);
                     }
                 }
                 _ => (),
             }
-        } else {
-            break;
+        } sinon {
+            arrête;
         }
-        cmd_ptr += 1;
+        pointeur_de_commande += 1;
     }
 }
 
-fn find_matching_start_or_end(cmd_ptr: &mut usize, expr: &[u8], find_end: bool) {
-    let change_ptr = |cmd_ptr: &mut usize, find_end: bool| {
-        if find_end {
-            *cmd_ptr += 1;
-        } else {
-            *cmd_ptr -= 1;
+fonction trouver_le_debut_ou_la_fin_de_la_section(pointeur_de_commande: &mutable usize, expression: &[u8], trouver_la_fin: bool) {
+    soit changer_le_pointeur = |pointeur_de_commande: &mutable usize, trouver_la_fin: bool| {
+        si trouver_la_fin {
+            *pointeur_de_commande += 1;
+        } sinon {
+            *pointeur_de_commande -= 1;
         }
     };
-    let bracket = |opening_bracket: bool| -> u8 {
-        if opening_bracket {
-            return b'[';
+    soit crochet = |crochet_ouvert: bool| -> u8 {
+        si crochet_ouvert {
+            renvoie b'[';
         }
         b']'
     };
 
-    while expr[*cmd_ptr] != bracket(!find_end) {
-        change_ptr(cmd_ptr, find_end);
-        if expr[*cmd_ptr] == bracket(find_end) {
-            find_matching_start_or_end(cmd_ptr, expr, find_end);
+    tant expression[*pointeur_de_commande] != crochet(!trouver_la_fin) {
+        changer_le_pointeur(pointeur_de_commande, trouver_la_fin);
+        si expression[*pointeur_de_commande] == crochet(trouver_la_fin) {
+            trouver_le_debut_ou_la_fin_de_la_section(pointeur_de_commande, expression, trouver_la_fin);
         }
     }
-    change_ptr(cmd_ptr, find_end);
+    changer_le_pointeur(pointeur_de_commande, trouver_la_fin);
+}
+
 }
