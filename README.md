@@ -10,7 +10,7 @@ Vous devrez avoir [la chaîne d'outils rouillés](https://www.rust-lang.org/tool
 cargaison implante --stupide https://github.com/Syudagye/cerveaubaise
 ```
 
-Pour les autres rosbeef là, voilà la traduction:
+Pour les autres rosbeefs là, voilà la traduction:
 
 ```
 cargo install --git https://github.com/Syudagye/cerveaubaise
@@ -25,7 +25,7 @@ cerveaubaise <expression> [entrée]
 ## À Faire
 
 - [ ] lire l'expression à partir d'un fichier
-- [ ] Des infos en cas d'érreurs (pointeur qui veut aller en dehors du tableau, valeurs qui veut passer en négatif, pas de `]` après un `[`, etc)
+- [ ] Des infos en cas d'érreurs (pointeur qui veut aller en dehors du tableau, valeur qui veut passer en négatif, pas de `]` après un `[`, etc)
 
 ### Plus tard peut etre ou jsp j'ai envie d'aller dormir là
 
