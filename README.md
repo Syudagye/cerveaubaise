@@ -10,7 +10,7 @@ Vous devrez avoir [la chaîne d'outils rouillés](https://www.rust-lang.org/tool
 cargaison implante --stupide https://github.com/Syudagye/cerveaubaise
 ```
 
-Pour les autres rosbeefs là, voilà la traduction:
+Pour les rosbeefs, voilà la traduction:
 
 ```
 cargo install --git https://github.com/Syudagye/cerveaubaise
